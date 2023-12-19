@@ -12,8 +12,8 @@ function multiply(num1, num2) {
 }
 // Returns message if dividing by zero
 function divide(num1, num2) {
-  if (+num1 && +num2) return num1 / num2;
-  return "Nope, no zeros!";
+  if (+num1 === 0 || +num2 === 0) return "Err: Div by 0";
+  return num1 / num2;
 }
 
 function operate(num1, operator, num2) {
@@ -26,11 +26,11 @@ function operate(num1, operator, num2) {
       return subtract(num1, num2);
       break;
 
-    case "*":
+    case "x":
       return multiply(num1, num2);
       break;
 
-    case "/":
+    case "÷":
       return divide(num1, num2);
       break;
   
@@ -47,13 +47,13 @@ let displaySum = 0;
 // DOM Elements
 let buttons = document.querySelector("#buttons");
 let screen = document.querySelector("#screen");
+let reset = document.querySelector("#reset");
 screen.textContent = displaySum;
 
 // Event Listeners
 buttons.addEventListener("click", e => {
   if (e.target.className === "number") {
     numberInput += e.target.textContent;
-
     screen.textContent = numberInput;
   }
   
@@ -70,10 +70,20 @@ buttons.addEventListener("click", e => {
     // Reset numberInput, ready for next number
     numberInput = "";
   }
+
+  if (e.target.id === "equals") {
+    if (displaySum && operatorInput && numberInput) {
+      displaySum = operate(displaySum, operatorInput, numberInput);
+
+      screen.textContent = displaySum;
+    }
+  }
+
+  if (e.target.id === "reset") resetCalculator();
   
 });
 
-// Reset the calculator to defaults
+// Calculator reset function
 function resetCalculator() {
   operatorInput = "";
   numberInput = "";
