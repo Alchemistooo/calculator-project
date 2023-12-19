@@ -1,18 +1,19 @@
-// Operator Logic
+// Operation Logic
 function add(num1, num2) {
-  return num1 + num2;
+  return +num1 + +num2;
 }
 
 function subtract(num1, num2) {
-  return num1 - num2;
+  return +num1 - +num2;
 }
 
 function multiply(num1, num2) {
-  return num1 * num2;
+  return +num1 * +num2;
 }
-
+// Returns message if dividing by zero
 function divide(num1, num2) {
-  return num1 / num2;
+  if (+num1 && +num2) return num1 / num2;
+  return "Nope, no zeros!";
 }
 
 function operate(num1, operator, num2) {
@@ -39,22 +40,44 @@ function operate(num1, operator, num2) {
 }
 
 // Global Variables
-let firstNum;
-let operator;
-let num2;
-let displayValue = 0;
+let operatorInput = "";
+let numberInput = "";
+let displaySum = 0;
 
 // DOM Elements
 let buttons = document.querySelector("#buttons");
 let screen = document.querySelector("#screen");
-screen.textContent = displayValue;
-
+screen.textContent = displaySum;
 
 // Event Listeners
 buttons.addEventListener("click", e => {
   if (e.target.className === "number") {
-    displayValue = e.target.textContent;
+    numberInput += e.target.textContent;
+
+    screen.textContent = numberInput;
   }
-  screen.textContent = displayValue;
+  
+  if (e.target.className === "operator") {
+    if (operatorInput) {
+      displaySum = operate(displaySum, operatorInput, numberInput);
+
+      screen.textContent = displaySum;
+    } else {
+      displaySum = numberInput;
+    }
+    operatorInput = e.target.textContent;
+    
+    // Reset numberInput, ready for next number
+    numberInput = "";
+  }
+  
 });
 
+// Reset the calculator to defaults
+function resetCalculator() {
+  operatorInput = "";
+  numberInput = "";
+  displaySum = 0;
+
+  screen.textContent = displaySum;
+}
