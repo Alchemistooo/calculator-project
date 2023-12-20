@@ -16,73 +16,39 @@ function divide(num1, num2) {
   return num1 / num2;
 }
 
-function operate(num1, operator, num2) {
-  switch (operator) {
-    case "+":
-      return add(num1, num2);
-      break;
-
-    case "-":
-      return subtract(num1, num2);
-      break;
-
-    case "x":
-      return multiply(num1, num2);
-      break;
-
-    case "÷":
-      return divide(num1, num2);
-      break;
+function roundSum (result) {
+  if (result.toString().length > 6) {
+    return result.toExponential(4);
+  } 
   
-    default:
-      break;
-  }
+  return result;
 }
 
-// Global Variables
-let operatorInput = "";
-let numberInput = "";
-let displaySum = 0;
-
-// DOM Elements
-let buttons = document.querySelector("#buttons");
-let screen = document.querySelector("#screen");
-let reset = document.querySelector("#reset");
-screen.textContent = displaySum;
-
-// Event Listeners
-buttons.addEventListener("click", e => {
-  if (e.target.className === "number") {
-    numberInput += e.target.textContent;
-    screen.textContent = numberInput;
-  }
-  
-  if (e.target.className === "operator") {
-    if (operatorInput) {
-      displaySum = operate(displaySum, operatorInput, numberInput);
-
-      screen.textContent = displaySum;
-    } else {
-      displaySum = numberInput;
+function operate(num1, operator, num2) {
+  let result;
+  switch (operator) {
+    case "+":
+      result = add(num1, num2);
+      break;
+      
+    case "-":
+      result = subtract(num1, num2);
+      break;
+      
+    case "x":
+      result = multiply(num1, num2);
+      break;
+      
+    case "÷":
+      result = divide(num1, num2);
+      break;
+      
+    default:
+      break;
     }
-    operatorInput = e.target.textContent;
-    
-    // Reset numberInput, ready for next number
-    numberInput = "";
-  }
 
-  if (e.target.id === "equals") {
-    if (displaySum && operatorInput && numberInput) {
-      displaySum = operate(displaySum, operatorInput, numberInput);
-
-      screen.textContent = displaySum;
-    }
-  }
-
-  if (e.target.id === "reset") resetCalculator();
-  
-});
-
+  return roundSum(result);
+}
 // Calculator reset function
 function resetCalculator() {
   operatorInput = "";
@@ -91,3 +57,51 @@ function resetCalculator() {
 
   screen.textContent = displaySum;
 }
+          
+// Global Variables
+let operatorInput = "";
+let numberInput = "";
+let displaySum = 0;
+let lastInput = "";
+
+// DOM Elements
+const buttons = document.querySelector("#buttons");
+const screen = document.querySelector("#screen");
+const reset = document.querySelector(".reset");
+screen.textContent = displaySum;
+
+// Event Listeners
+buttons.addEventListener("click", e => {
+  if (e.target.className === "number") {
+    if (numberInput.length < 13) {
+      numberInput += e.target.textContent;
+      screen.textContent = numberInput;
+    }
+  }
+  
+  if (e.target.className === "operator") {
+    if (operatorInput && lastInput !== "equals") {
+      displaySum = operate(displaySum, operatorInput, numberInput);
+      screen.textContent = displaySum;
+    } else if (!operatorInput){
+      displaySum = numberInput;
+    }
+
+    operatorInput = e.target.textContent;
+    
+    // Reset numberInput, ready for next number
+    numberInput = "";
+  }
+
+  if (e.target.className === "equals") {
+    if (displaySum && operatorInput && numberInput) {
+      displaySum = operate(displaySum, operatorInput, numberInput);
+
+      screen.textContent = displaySum;
+    }
+  }
+
+  if (e.target.className === "reset") resetCalculator();
+  
+  lastInput = e.target.className;
+});
