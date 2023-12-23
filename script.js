@@ -49,7 +49,7 @@ function operate(num1, operator, num2) {
 
   return roundSum(result);
 }
-// Calculator reset function
+
 function resetCalculator() {
   operatorInput = "";
   numberInput = "";
@@ -68,6 +68,7 @@ let lastInput = "";
 const buttons = document.querySelector("#buttons");
 const screen = document.querySelector("#screen");
 const reset = document.querySelector(".reset");
+const decimal = document.querySelector(".decimal");
 screen.textContent = displaySum;
 
 // Event Listeners
@@ -77,6 +78,14 @@ buttons.addEventListener("click", e => {
       numberInput += e.target.textContent;
       screen.textContent = numberInput;
     }
+  }
+
+  if (e.target.className === "decimal") {
+    let numArray = numberInput.split("");
+    if (!numArray.includes(".")) {
+      numberInput += e.target.textContent;
+      screen.textContent = numberInput;
+    } 
   }
   
   if (e.target.className === "operator") {
@@ -98,6 +107,8 @@ buttons.addEventListener("click", e => {
       displaySum = operate(displaySum, operatorInput, numberInput);
 
       screen.textContent = displaySum;
+      // Can remove this string reset to allow equals to continuously repeat last operation
+      numberInput = "";
     }
   }
 
