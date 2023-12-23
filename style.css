@@ -53,3 +53,8 @@ div.row button {
 button#zero {
   flex: 4 1 100px;
 }
+
+button.operator:focus {
+  background-color: grey;
+  color: white;
+}
